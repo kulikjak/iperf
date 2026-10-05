@@ -737,6 +737,7 @@ int
 iperf_sctp_get_info(struct iperf_stream *sp, struct iperf_sctp_info *sctp_info)
 {
 #if defined(HAVE_SCTP_H)
+    struct sctp_assoc_stats *assoc_stats;
     struct sctp_status status;
     socklen_t len;
     sctp_assoc_t assoc_id;

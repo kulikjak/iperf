@@ -3970,6 +3970,9 @@ iperf_stats_callback(struct iperf_test *test)
                 temp.rtt = sctp_info.rtt;
                 temp.snd_cwnd = sctp_info.cwnd;
                 temp.snd_wnd = sctp_info.wnd;
+                temp.interval_retrans = sctp_info.retrans - rp->stream_prev_total_retrans;
+                rp->stream_retrans += temp.interval_retrans;
+                rp->stream_prev_total_retrans = sctp_info.retrans;
                 if (temp.snd_cwnd > rp->stream_max_snd_cwnd) {
                     rp->stream_max_snd_cwnd = temp.snd_cwnd;
                 }

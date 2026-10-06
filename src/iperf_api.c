@@ -635,6 +635,10 @@ check_sender_has_retransmits(struct iperf_test *ipt)
 {
     if (ipt->mode != RECEIVER && ipt->protocol->id == Ptcp && has_tcpinfo_retransmits())
 	ipt->sender_has_retransmits = 1;
+#ifdef HAVE_SCTP
+    else if (ipt->mode != RECEIVER && ipt->protocol->id == Psctp)
+        ipt->sender_has_retransmits = 1;
+#endif
     else
 	ipt->sender_has_retransmits = 0;
 }
@@ -2794,8 +2798,7 @@ get_parameters(struct iperf_test *test)
 	if ((j_p = iperf_cJSON_GetObjectItemType(j, "skip_rx_copy", cJSON_Number)) != NULL){
             test->settings->skip_rx_copy = (j_p->valueint) ? 1: 0;
         }
-	if (test->mode && test->protocol->id == Ptcp && has_tcpinfo_retransmits())
-	    test->sender_has_retransmits = 1;
+    test->sender_has_retransmits = check_sender_has_retransmits(test);
 	if (test->settings->rate)
 	    cJSON_AddNumberToObject(test->json_start, "target_bitrate", test->settings->rate);
 

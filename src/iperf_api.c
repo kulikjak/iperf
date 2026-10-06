@@ -2798,7 +2798,7 @@ get_parameters(struct iperf_test *test)
 	if ((j_p = iperf_cJSON_GetObjectItemType(j, "skip_rx_copy", cJSON_Number)) != NULL){
             test->settings->skip_rx_copy = (j_p->valueint) ? 1: 0;
         }
-    test->sender_has_retransmits = check_sender_has_retransmits(test);
+    check_sender_has_retransmits(test);
 	if (test->settings->rate)
 	    cJSON_AddNumberToObject(test->json_start, "target_bitrate", test->settings->rate);
 

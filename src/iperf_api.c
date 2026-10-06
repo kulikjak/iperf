@@ -635,10 +635,10 @@ check_sender_has_retransmits(struct iperf_test *ipt)
 {
     if (ipt->mode != RECEIVER && ipt->protocol->id == Ptcp && has_tcpinfo_retransmits())
 	ipt->sender_has_retransmits = 1;
-#ifdef HAVE_SCTP
+#ifdef HAVE_SCTP_H
     else if (ipt->mode != RECEIVER && ipt->protocol->id == Psctp)
         ipt->sender_has_retransmits = 1;
-#endif
+#endif /* HAVE_SCTP_H */
     else
 	ipt->sender_has_retransmits = 0;
 }

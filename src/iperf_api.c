@@ -3864,9 +3864,18 @@ iperf_reset_stats(struct iperf_test *test)
         rp->bytes_received = 0;
         rp->bytes_sent_this_interval = rp->bytes_received_this_interval = 0;
 	if (test->sender_has_retransmits == 1) {
-	    struct iperf_interval_results ir; /* temporary results structure */
-	    save_tcpinfo(sp, &ir);
-	    rp->stream_prev_total_retrans = get_total_retransmits(&ir);
+	    if (test->protocol->id == Ptcp) {
+		struct iperf_interval_results ir; /* temporary results structure */
+		save_tcpinfo(sp, &ir);
+		rp->stream_prev_total_retrans = get_total_retransmits(&ir);
+	    } else if (test->protocol->id == Psctp) {
+		struct iperf_sctp_info sctp_info;
+		if (iperf_sctp_get_info(sp, &sctp_info) >= 0) {
+		    rp->stream_prev_total_retrans = sctp_info.retrans;
+		} else {
+		    rp->stream_prev_total_retrans = 0;
+		}
+	    }
 	}
 	rp->stream_retrans = 0;
 	rp->start_time = now;
@@ -4156,7 +4165,7 @@ iperf_print_intermediate(struct iperf_test *test)
                     return;
                 }
                 bytes += irp->bytes_transferred;
-                if (test->protocol->id == Ptcp) {
+                if (test->protocol->id == Ptcp || test->protocol->id == Psctp) {
                     if (test->sender_has_retransmits == 1) {
                         retransmits += irp->interval_retrans;
                     }

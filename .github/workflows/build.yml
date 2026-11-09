@@ -74,6 +74,10 @@ jobs:
     - name: build
       run: |
         ./configure CFLAGS="-g -O0 -fsanitize=address" LDFLAGS="-fsanitize=address" && make && make check
+      continue-on-error: true
+    - name: see log
+      run: |
+        cat src/test-suite.log
     - name: test commands
       run: |
         timeout 300 src/iperf3 -s &

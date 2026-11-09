@@ -5,6 +5,7 @@ on:
   push:
     branches:
         - master
+        - sctp-interval-reporting
   pull_request:
     branches:
         - master
